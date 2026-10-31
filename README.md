@@ -1,25 +1,36 @@
 # GEO Multi-Agent System
 ### Brand Visibility Analysis via Generative Engine Optimization
 
+How consistently do LLMs mention local businesses when people ask them for recommendations?
+This multi-agent system measures it end to end: it generates realistic prompts, queries several LLMs,
+extracts and deduplicates the brands they mention, computes visibility metrics, then checks each brand
+against the web (maps, reviews, social profiles) to flag hallucinations.
+
+On Tunisian restaurants it collected **450 LLM answers**, found **234 restaurants** and enriched **182** of them
+with their online presence; the top 15% of restaurants receive 62% of all mentions.
+
+School project (ENET'COM), team of two: Rami Ayouni and Emna Kaaniche.
+
 ---
 
 ## 📁 Project Organization
 
-The project is organized for clean separation of concerns:
+All code lives in [`Final/`](Final):
 
 ```
-core/               # Shared LLM utilities
-agents/             # Core agent implementations (Agent 0, 1, 2)
-graph/              # LangGraph orchestration (StateGraph + nodes)
-web_interface/      # Streamlit dashboard
-tests/              # Unit and integration tests
-geo_output/         # Pipeline outputs (generated at runtime)
+Final/
+  agents/        # Agent 0 (prompts), Agent 1 (GEO analysis), Agent 2 (ReAct web research)
+  core/          # LLM client, model registry, memory, query parser, status tracking
+  graph/         # LangGraph StateGraph: nodes, supervisors (quality gates), state
+  mcp_servers/   # MCP tool servers used by the ReAct agent: search, scrape, wiki
+  mcp_server.py  # the whole pipeline exposed as one MCP server
+  pipeline.py    # CLI entry point
+  tests/         # unit and integration tests
 ```
 
-**Key entry points:**
-- CLI: `python pipeline.py --query "your query"`
+**Key entry points** (run from `Final/`):
+- CLI: `python pipeline.py --query "Restaurants in Sfax"`
 - MCP: `python mcp_server.py` (for Claude Desktop, VS Code)
-- Dashboard: `streamlit run web_interface/dashboard.py`
 
 ---
 
